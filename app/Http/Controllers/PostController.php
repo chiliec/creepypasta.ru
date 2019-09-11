@@ -3,10 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\PostContent;
 use Illuminate\Http\Request;
+use Exception;
 
 class PostController extends Controller
 {
+    private $postsPerPage = 10;
+    private $minPostLength = 50;
+
+    private function validationRules() {
+        $types = implode(',', Post::$validTypes);
+        return [
+            'title' => 'required|string|max:255',
+            'source' => "required|min:{$this->minPostLength}",
+            'type' => "required|in:{$types}",
+            'tags' => 'nullable'
+        ];
+    }
+
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +34,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        $posts = Post::latest()->paginate($this->postsPerPage);
+        return view('posts.index', compact('posts'))
+            ->with('i', (request()->input('page', 1) - 1) * $this->postsPerPage);
     }
 
     /**
@@ -24,7 +46,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -35,10 +57,25 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate()
-        $post = new Post($request->all());
-        $post->saveOrFail();
-        return redirect('/posts');
+        $source = request('source');
+        $attributes = $request->validate($this->validationRules());
+        $attributes['description'] = $source;
+        $attributes['hash'] = md5($source);
+        $attributes['user_ip'] = $request->getClientIp();
+        $post = Post::create($attributes);
+        switch ($post->type) {
+            case 'content':
+                PostContent::create([
+                    'post_id' => $post->id,
+                    'source' => $source,
+                    'text' => $source,
+                ]);
+                break;
+            default:
+                throwException(new Exception('Unknown post type'));
+        }
+        return redirect()->route('posts.show', $post->id)
+            ->with('status', 'Post created successfully.');
     }
 
     /**
@@ -49,7 +86,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return $post;
+        return view('posts.show',compact('post'));
     }
 
     /**
@@ -60,6 +97,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        if (auth()->user()->id !== $post->user_id) {
+            throwException(new Exception('You are not allowed to edit this post.'));
+        }
         return view('posts.edit', compact('post'));
     }
 
@@ -72,8 +112,27 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $post->update($request->all());
-        return redirect('/posts');
+        if (auth()->user()->id !== $post->user_id) {
+            throwException(new Exception('You are not allowed to update this post.'));
+        }
+        $attributes = $request->validate($this->validationRules());
+        $source = request('source');
+        $attributes['description'] = $source;
+        $attributes['hash'] = md5($source);
+        $post->update($attributes);
+        switch ($post->type) {
+            case 'content':
+                $post->content()->update([
+                    'post_id' => $post->id,
+                    'source' => $source,
+                    'text' => $source,
+                ]);
+                break;
+            default:
+                throwException(new Exception('Unknown post type'));
+        }
+        return redirect()->route('posts.show', $post->id)
+            ->with('status', 'Post updated successfully.');
     }
 
     /**
@@ -84,6 +143,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if (auth()->user()->id !== $post->user_id) {
+            throwException(new Exception('You are not allowed to delete this post.'));
+        }
         $post->delete();
         return redirect('/posts');
     }
