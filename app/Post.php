@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 class Post extends Model
 {
@@ -33,7 +33,7 @@ class Post extends Model
             case 'content':
                 return $this->hasOne(PostContent::class);
             default:
-                throwException(new Exception('Unknown post type'));
+                abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
     }
 }

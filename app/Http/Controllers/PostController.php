@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\PostContent;
 use Illuminate\Http\Request;
-use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -72,7 +72,7 @@ class PostController extends Controller
                 ]);
                 break;
             default:
-                throwException(new Exception('Unknown post type'));
+                abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
         return redirect()->route('posts.show', $post->id)
             ->with('status', 'Post created successfully.');
@@ -86,7 +86,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('posts.show',compact('post'));
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -98,7 +98,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         if (auth()->user()->id !== $post->user_id) {
-            throwException(new Exception('You are not allowed to edit this post.'));
+            abort(Response::HTTP_FORBIDDEN, 'You are not allowed to edit this post.');
         }
         return view('posts.edit', compact('post'));
     }
@@ -113,7 +113,7 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         if (auth()->user()->id !== $post->user_id) {
-            throwException(new Exception('You are not allowed to update this post.'));
+            abort(Response::HTTP_FORBIDDEN, 'You are not allowed to update this post.');
         }
         $attributes = $request->validate($this->validationRules());
         $source = request('source');
@@ -129,7 +129,7 @@ class PostController extends Controller
                 ]);
                 break;
             default:
-                throwException(new Exception('Unknown post type'));
+                abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
         return redirect()->route('posts.show', $post->id)
             ->with('status', 'Post updated successfully.');
@@ -144,7 +144,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if (auth()->user()->id !== $post->user_id) {
-            throwException(new Exception('You are not allowed to delete this post.'));
+            abort(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this post.');
         }
         $post->delete();
         return redirect('/posts');
