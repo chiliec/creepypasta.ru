@@ -24,7 +24,7 @@ class PostController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'detail']]);
     }
 
     /**
@@ -74,8 +74,24 @@ class PostController extends Controller
             default:
                 abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
-        return redirect()->route('posts.show', $post->id)
+        return redirect()->route('postDetail', [$post->id, $post->slug])
             ->with('status', 'Post created successfully.');
+    }
+
+    /**
+     * Display post with slug url
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function detail($id, $slug = '')
+    {
+        $post = Post::findOrFail($id);
+        if ($slug !== $post->slug) {
+            return redirect()->to($post->url);
+        }
+        return view('posts.detail')
+            ->withPost($post)
     }
 
     /**
@@ -84,9 +100,8 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
-    {
-        return view('posts.show', compact('post'));
+    public function show(Post $post) {
+        return redirect()->to($post->url);
     }
 
     /**
@@ -131,7 +146,7 @@ class PostController extends Controller
             default:
                 abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
-        return redirect()->route('posts.show', $post->id)
+        return redirect()->route('postDetail', [$post->id, $post->slug])
             ->with('status', 'Post updated successfully.');
     }
 

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class Post extends Model
@@ -18,22 +19,24 @@ class Post extends Model
     {
         parent::boot();
 
-        self::creating(function($model) {
+        self::saving(function($model) {
             $model->user_id = auth()->id();
-            $model->slug = md5($model->title);
-        });
-
-        self::updating(function($model) {
-            $model->slug = md5($model->title);
+            $model->slug = Str::slug($model->title);
         });
     }
 
-    public function content() {
+    public function content()
+    {
         switch ($this->type) {
             case 'content':
                 return $this->hasOne(PostContent::class);
             default:
                 abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return action('PostController@detail', [$this->id, $this->slug]);
     }
 }

@@ -19,4 +19,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('postDetail');
 Route::resource('posts', 'PostController');
