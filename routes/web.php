@@ -11,13 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
+Route::redirect('/', '/posts');
 Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('postDetail');
 Route::resource('posts', 'PostController');
