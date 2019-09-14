@@ -26,7 +26,13 @@
                             </div>
                         @endif
 
-                        <div class="card">{{ $post->content->show() }}
+                        <div class="card">
+                            <p class="card-text">
+                                {{ $post->content->show() }}
+                            </p>
+                            <div class="card-footer">
+                                Автор: {{ $post->author->name }}
+                            </div>
                         </div>
                     </div>
                 </div>

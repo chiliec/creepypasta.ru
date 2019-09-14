@@ -35,6 +35,15 @@ class Post extends Model
         }
     }
 
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'user_id')
+            ->withDefault([
+                'id' => 0,
+                'name' => 'Guest'
+            ]);
+    }
+
     public function getUrlAttribute(): string
     {
         return action('PostController@detail', [$this->id, $this->slug]);
