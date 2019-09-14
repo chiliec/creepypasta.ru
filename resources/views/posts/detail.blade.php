@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('title', $post->title)
+@section('canonical', $post->url)
 
 @section('content')
     <div class="container">

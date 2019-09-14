@@ -91,7 +91,7 @@ class PostController extends Controller
             return redirect()->to($post->url);
         }
         return view('posts.detail')
-            ->withPost($post)
+            ->withPost($post);
     }
 
     /**
@@ -162,6 +162,6 @@ class PostController extends Controller
             abort(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this post.');
         }
         $post->delete();
-        return redirect('/posts');
+        return redirect()->route('posts.index');
     }
 }

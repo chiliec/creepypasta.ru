@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@if(!$posts->onFirstPage())
+    @section('title', config('app.name', 'Creepypasta') . ' - page ' . $posts->currentPage())
+    @section('canonical', action('PostController@index', ['page' => $posts->currentPage()]))
+@endif
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -24,7 +29,7 @@
                             </div>
                         @endforeach
 
-                        {!! $posts->links() !!}
+                        {{ $posts->links() }}
                     </div>
                 </div>
             </div>
