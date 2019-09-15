@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\PostContent;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
+use Exception;
 
 class PostController extends Controller
 {
@@ -24,13 +25,13 @@ class PostController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'detail']]);
+        $this->middleware('auth', ['except' => ['index', 'show', 'detail']]);
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -42,7 +43,7 @@ class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -52,8 +53,8 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -82,7 +83,8 @@ class PostController extends Controller
      * Display post with slug url
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param  string $slug
+     * @return Response
      */
     public function detail($id, $slug = '')
     {
@@ -97,8 +99,8 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param Post $post
+     * @return Response
      */
     public function show(Post $post) {
         return redirect()->to($post->url);
@@ -107,8 +109,8 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param Post $post
+     * @return Response
      */
     public function edit(Post $post)
     {
@@ -121,9 +123,9 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Post $post
+     * @return Response
      */
     public function update(Request $request, Post $post)
     {
@@ -153,8 +155,9 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param Post $post
+     * @return Response
+     * @throws Exception
      */
     public function destroy(Post $post)
     {
