@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\PostContent;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Exception;
@@ -26,6 +27,7 @@ class PostController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show', 'detail']]);
+        $this->authorizeResource(Post::class);
     }
 
     /**
@@ -82,13 +84,15 @@ class PostController extends Controller
     /**
      * Display post with slug url
      *
-     * @param  int $id
-     * @param  string $slug
+     * @param int $id
+     * @param string $slug
      * @return Response
+     * @throws AuthorizationException
      */
     public function detail($id, $slug = '')
     {
         $post = Post::findOrFail($id);
+        $this->authorize('view', $post);
         if ($slug !== $post->slug) {
             return redirect()->to($post->url);
         }
@@ -114,9 +118,6 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (auth()->user()->id !== $post->user_id) {
-            abort(Response::HTTP_FORBIDDEN, 'You are not allowed to edit this post.');
-        }
         return view('posts.edit', compact('post'));
     }
 
@@ -129,9 +130,6 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        if (auth()->user()->id !== $post->user_id) {
-            abort(Response::HTTP_FORBIDDEN, 'You are not allowed to update this post.');
-        }
         $attributes = $request->validate($this->validationRules());
         $source = request('source');
         $attributes['description'] = $source;
@@ -161,9 +159,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (auth()->user()->id !== $post->user_id) {
-            abort(Response::HTTP_FORBIDDEN, 'You are not allowed to delete this post.');
-        }
         $post->delete();
         return redirect()->route('posts.index');
     }

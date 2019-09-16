@@ -11,10 +11,14 @@
                     <div class="pull-right">
                         <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
                             <a class="btn btn-primary" href="{{ route('posts.index') }}">Назад</a>
-                            <a class="btn btn-dark" href="{{ route('posts.edit', $post->id) }}">Редактировать</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены что хотите удалить пост?')">Удалить</button>
+                            @can('update', $post)
+                                <a class="btn btn-dark" href="{{ route('posts.edit', $post->id) }}">Редактировать</a>
+                            @endcan
+                            @can('delete', $post)
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены что хотите удалить пост?')">Удалить</button>
+                            @endcan
                         </form>
                     </div>
 
