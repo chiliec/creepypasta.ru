@@ -21,7 +21,7 @@ class Post extends Model
 
         self::saving(function($model) {
             $model->user_id = auth()->id();
-            $model->slug = Str::slug($model->title);
+            $model->slug = Str::limit(Str::slug($model->title), 255, '');
         });
     }
 
