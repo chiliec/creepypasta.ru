@@ -13,6 +13,9 @@
 
 Auth::routes();
 
+Route::get('users', 'UserController@index')->name('users.index');
+Route::get('users/{id}', 'UserController@show')->name('users.show');
+
 Route::redirect('/', '/posts');
-Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('postDetail');
+Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('posts.detail');
 Route::resource('posts', 'PostController');

@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\PostContent;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostController extends Controller
 {
@@ -57,6 +57,8 @@ class PostController extends Controller
      *
      * @param Request $request
      * @return Response
+     * @throws HttpException
+     * @throws NotFoundHttpException
      */
     public function store(Request $request)
     {
@@ -77,7 +79,7 @@ class PostController extends Controller
             default:
                 abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
-        return redirect()->route('postDetail', [$post->id, $post->slug])
+        return redirect()->route('posts.detail', [$post->id, $post->slug])
             ->with('status', 'Post created successfully.');
     }
 
@@ -87,7 +89,6 @@ class PostController extends Controller
      * @param int $id
      * @param string $slug
      * @return Response
-     * @throws AuthorizationException
      */
     public function detail($id, $slug = '')
     {
@@ -106,7 +107,8 @@ class PostController extends Controller
      * @param Post $post
      * @return Response
      */
-    public function show(Post $post) {
+    public function show(Post $post)
+    {
         return redirect()->to($post->url);
     }
 
@@ -127,6 +129,8 @@ class PostController extends Controller
      * @param Request $request
      * @param Post $post
      * @return Response
+     * @throws HttpException
+     * @throws NotFoundHttpException
      */
     public function update(Request $request, Post $post)
     {
@@ -146,7 +150,7 @@ class PostController extends Controller
             default:
                 abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
         }
-        return redirect()->route('postDetail', [$post->id, $post->slug])
+        return redirect()->route('posts.detail', [$post->id, $post->slug])
             ->with('status', 'Post updated successfully.');
     }
 
@@ -155,7 +159,6 @@ class PostController extends Controller
      *
      * @param Post $post
      * @return Response
-     * @throws Exception
      */
     public function destroy(Post $post)
     {

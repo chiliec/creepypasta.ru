@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
-@if(!$posts->onFirstPage())
-    @section('title', config('app.name', 'Creepypasta') . ' - page ' . $posts->currentPage())
-    @section('canonical', action('PostController@index', ['page' => $posts->currentPage()]))
+@if($users->onFirstPage())
+    @section('title', 'Users')
+@else
+    @section('title', 'Users - page ' . $users->currentPage())
+    @section('canonical', action('UserController@index', ['page' => $users->currentPage()]))
 @endif
 
 @section('content')
@@ -22,15 +24,13 @@
                             </div>
                         @endif
 
-                        @foreach($posts as $post)
+                        @foreach($users as $user)
                             <div class="card">
-                                <p>Title: <a href="{{route('posts.detail', [$post->id, $post->slug])}}">{{ $post->title }}</a></p>
-                                <p>Content: {{ $post->content->show() }}</p>
-                                <p>Author: {{ $post->author->name }}</p>
+                                <p>Name: <a href="{{route('users.show', $user->id)}}">{{ $user->name }}</a></p>
                             </div>
                         @endforeach
 
-                        {{ $posts->links() }}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@
                                 {{ $post->content->show() }}
                             </p>
                             <div class="card-footer">
-                                Автор: {{ $post->author->name }}
+                                Автор: <a href="{{route('users.show', $post->author->id)}}">{{ $post->author->name }}</a>
                             </div>
                         </div>
                     </div>
