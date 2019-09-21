@@ -32,6 +32,7 @@ final class AddLoveReactantIdToPostsTable extends Migration
     public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
+            $table->dropForeign(['love_reactant_id']);
             $table->dropColumn('love_reactant_id');
         });
     }
