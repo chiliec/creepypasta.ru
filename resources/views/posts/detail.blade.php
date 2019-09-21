@@ -35,6 +35,10 @@
                                 {{ $post->content->show() }}
                             </p>
                             <div class="card-footer">
+                                <div class="d-flex justify-content-center">
+                                    <a href="{{ route('posts.vote', [$post, 'like']) }}" class="btn btn-primary btn-sm">({{ $post->viaLoveReactant()->getReactionCounterOfType('Like')->getCount() }}) 👍</a>
+                                    <a href="{{ route('posts.vote', [$post, 'dislike']) }}" class="btn btn-secondary btn-sm">({{ $post->viaLoveReactant()->getReactionCounterOfType('Dislike')->getCount() }}) 👎</a>
+                                </div>
                                 Автор: <a href="{{route('users.show', $post->author->id)}}">{{ $post->author->name }}</a>
                             </div>
                         </div>

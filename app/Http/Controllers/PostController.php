@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\PostContent;
+use Cog\Laravel\Love\ReactionType\Models\ReactionType;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -89,6 +94,7 @@ class PostController extends Controller
      * @param int $id
      * @param string $slug
      * @return Response
+     * @throws AuthorizationException
      */
     public function detail($id, $slug = '')
     {
@@ -159,10 +165,38 @@ class PostController extends Controller
      *
      * @param Post $post
      * @return Response
+     * @throws Exception
      */
     public function destroy(Post $post)
     {
         $post->delete();
         return redirect()->route('posts.index');
+    }
+
+    /**
+     * @param Post $post
+     * @param string $reactionTypeName
+     * @return RedirectResponse|void
+     */
+    public function vote(Post $post, string $reactionTypeName = 'like')
+    {
+        $reactionNames = ReactionType::all()
+            ->map(function($reaction) {
+                return Str::lower($reaction->name);
+            })
+            ->toArray();
+        if (!in_array($reactionTypeName, $reactionNames)) {
+            return abort(500, 'Unknown reaction');
+        }
+        if ($post->viaLoveReactant()->isReactedBy(auth()->user(), $reactionTypeName)) {
+            auth()->user()->viaLoveReacter()->unreactTo($post, $reactionTypeName);
+        } else {
+            auth()->user()->viaLoveReacter()->reactTo($post, $reactionTypeName);
+        }
+        $reverseReactionTypeName = ($reactionTypeName === 'like') ? 'dislike' : 'like';
+        if ($post->viaLoveReactant()->isReactedBy(auth()->user(), $reverseReactionTypeName)) {
+            auth()->user()->viaLoveReacter()->unreactTo($post, $reverseReactionTypeName);
+        }
+        return back();
     }
 }

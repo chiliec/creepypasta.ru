@@ -18,4 +18,5 @@ Route::get('users/{id}', 'UserController@show')->name('users.show');
 
 Route::redirect('/', '/posts');
 Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('posts.detail');
+Route::get('posts/{post}/vote/{reaction}', 'PostController@vote')->name('posts.vote');
 Route::resource('posts', 'PostController');

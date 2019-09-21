@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
+use Cog\Contracts\Love\Reactable\Models\Reactable as ReactableContract;
+use Cog\Laravel\Love\Reactable\Models\Traits\Reactable;
 
-class Post extends Model
+class Post extends Model implements ReactableContract
 {
+    use Reactable;
     use SoftDeletes;
 
     public static $validTypes = ['content', 'video'];
