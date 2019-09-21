@@ -188,15 +188,18 @@ class PostController extends Controller
         if (!in_array($reactionTypeName, $reactionNames)) {
             return abort(500, 'Unknown reaction');
         }
+        $statusMessage = 'Вы успешно проголосовали!';
         if ($post->viaLoveReactant()->isReactedBy(auth()->user(), $reactionTypeName)) {
             auth()->user()->viaLoveReacter()->unreactTo($post, $reactionTypeName);
+            $statusMessage = 'Ваш голос успешно удалён!';
         } else {
             auth()->user()->viaLoveReacter()->reactTo($post, $reactionTypeName);
         }
         $reverseReactionTypeName = ($reactionTypeName === 'like') ? 'dislike' : 'like';
         if ($post->viaLoveReactant()->isReactedBy(auth()->user(), $reverseReactionTypeName)) {
             auth()->user()->viaLoveReacter()->unreactTo($post, $reverseReactionTypeName);
+            $statusMessage = 'Ваш голос успешно изменён!';
         }
-        return back();
+        return back()->with('status', $statusMessage);
     }
 }
