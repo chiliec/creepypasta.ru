@@ -21,3 +21,9 @@ Route::redirect('/home', '/posts');
 Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('posts.detail');
 Route::get('posts/{post}/vote/{reaction}', 'PostController@vote')->name('posts.vote');
 Route::resource('posts', 'PostController');
+
+Route::prefix('profile')->group(function () {
+    Route::get('invites', 'InviteController@index')->name('invites.index');
+    Route::get('invites/new', 'InviteController@store')->name('invites.new');
+});
+

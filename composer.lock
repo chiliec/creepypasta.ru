@@ -4,8 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ee015ded63083decd64ba136ae7b51e",
+    "content-hash": "d84f07265d054e16c0d6ecb2e1f33116",
     "packages": [
+        {
+            "name": "clarkeash/doorman",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clarkeash/doorman.git",
+                "reference": "9870fcaba34aaeb1fc09c42e946b2280176e97f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clarkeash/doorman/zipball/9870fcaba34aaeb1fc09c42e946b2280176e97f0",
+                "reference": "9870fcaba34aaeb1fc09c42e946b2280176e97f0",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^6.0",
+                "php": "^7.2",
+                "ramsey/uuid": "^3.6"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "orchestra/testbench": "^4.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Clarkeash\\Doorman\\Providers\\DoormanServiceProvider"
+                    ],
+                    "aliases": {
+                        "Doorman": "Clarkeash\\Doorman\\Facades\\Doorman"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Clarkeash\\Doorman\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ashley Clarke",
+                    "email": "me@ashleyclarke.me"
+                }
+            ],
+            "time": "2019-09-05T18:06:04+00:00"
+        },
         {
             "name": "cybercog/laravel-love",
             "version": "8.1.1",
