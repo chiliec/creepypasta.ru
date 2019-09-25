@@ -20,6 +20,7 @@ Route::redirect('/', '/posts');
 Route::redirect('/home', '/posts');
 Route::get('posts/{id}-{slug}.html', 'PostController@detail')->name('posts.detail');
 Route::get('posts/{post}/vote/{reaction}', 'PostController@vote')->name('posts.vote');
+Route::get('tag/{tag}', 'PostController@tag')->name('posts.tag');
 Route::resource('posts', 'PostController');
 
 Route::prefix('profile')->group(function () {

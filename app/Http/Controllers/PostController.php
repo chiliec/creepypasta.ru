@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\PostContent;
 use Cog\Laravel\Love\ReactionType\Models\ReactionType;
+use Conner\Tagging\Model\Tag;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -73,6 +74,8 @@ class PostController extends Controller
         $attributes['hash'] = md5($source);
         $attributes['user_ip'] = $request->getClientIp();
         $post = Post::create($attributes);
+        $tags = request('tags');
+        $post->tag($tags);
         switch ($post->type) {
             case 'content':
                 PostContent::create([
@@ -145,6 +148,8 @@ class PostController extends Controller
         $attributes['description'] = $source;
         $attributes['hash'] = md5($source);
         $post->update($attributes);
+        $tags = request('tags');
+        $post->tag($tags);
         switch ($post->type) {
             case 'content':
                 $post->content()->update([
@@ -171,6 +176,20 @@ class PostController extends Controller
     {
         $post->delete();
         return redirect()->route('posts.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param string $slug
+     * @return Response
+     */
+    public function tag(string $slug)
+    {
+        $tag = Tag::where(['slug' => $slug])->firstOrFail();
+        $posts = Post::withAnyTag([$slug])->paginate($this->postsPerPage);
+        return view('posts.tag', ['tag' => $tag, 'posts' => $posts])
+            ->with('i', (request()->input('page', 1) - 1) * $this->postsPerPage);
     }
 
     /**

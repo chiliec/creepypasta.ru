@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Conner\Tagging\Taggable;
+use Conner\Tagging\TaggingUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -13,8 +15,9 @@ class Post extends Model implements ReactableContract
 {
     use Reactable;
     use SoftDeletes;
+    use Taggable;
 
-    public static $validTypes = ['content', 'video'];
+    public static $validTypes = ['content', 'video', 'link'];
 
     protected $fillable = ['title', 'description', 'type', 'tags', 'user_ip', 'hash'];
 
@@ -50,5 +53,11 @@ class Post extends Model implements ReactableContract
     public function getUrlAttribute(): string
     {
         return action('PostController@detail', [$this->id, $this->slug]);
+    }
+
+    public function getTagsStringAttribute(): string
+    {
+        $tags = $this->tags->pluck('name')->toArray();
+        return implode(', ', $tags);
     }
 }
