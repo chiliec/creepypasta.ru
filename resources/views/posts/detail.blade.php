@@ -39,7 +39,8 @@
                                     <a href="{{ route('posts.vote', [$post, 'like']) }}" class="btn btn-primary btn-sm">({{ $post->viaLoveReactant()->getReactionCounterOfType('Like')->getCount() }}) 👍</a>
                                     <a href="{{ route('posts.vote', [$post, 'dislike']) }}" class="btn btn-secondary btn-sm">({{ $post->viaLoveReactant()->getReactionCounterOfType('Dislike')->getCount() }}) 👎</a>
                                 </div>
-                                Автор: <a href="{{route('users.show', $post->author->id)}}">{{ $post->author->name }}</a>
+                                <p>Автор: <a href="{{route('users.show', $post->author->id)}}">{{ $post->author->name }}</a></p>
+                                <p>Теги: @foreach($post->tags as $tag) <a href="{{route('posts.tag', $tag->slug)}}">{{ $tag->name }}</a>, @endforeach</p>
                             </div>
                         </div>
                     </div>

@@ -14,7 +14,8 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
-        "laravel/ui": "^1.0"
+        "laravel/ui": "^1.0",
+        "rtconner/laravel-tagging": "~3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

@@ -40,6 +40,12 @@
                     <textarea class="form-control" style="height:150px" name="source" placeholder="Текст">{{ old('source') }}</textarea>
                 </div>
             </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Теги:</strong>
+                    <input type="text" name="tags" class="form-control" placeholder="google, вконтакте, кирпич" value="{{ old('tags') }}">
+                </div>
+            </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
