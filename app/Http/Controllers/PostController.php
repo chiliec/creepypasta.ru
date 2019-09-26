@@ -187,7 +187,7 @@ class PostController extends Controller
     public function tag(string $slug)
     {
         $tag = Tag::where(['slug' => $slug])->firstOrFail();
-        $posts = Post::withAnyTag([$slug])->paginate($this->postsPerPage);
+        $posts = Post::withAnyTag([$slug])->latest()->paginate($this->postsPerPage);
         return view('posts.tag', ['tag' => $tag, 'posts' => $posts])
             ->with('i', (request()->input('page', 1) - 1) * $this->postsPerPage);
     }

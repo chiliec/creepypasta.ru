@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @if($posts->onFirstPage())
-    @section('title', $tag->name . ' - page ' . $posts->currentPage())
+    @section('title', $tag->name)
     @section('canonical', action('PostController@index'))
 @else
     @section('title', $tag->name . ' - page ' . $posts->currentPage())
