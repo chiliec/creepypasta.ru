@@ -11,14 +11,17 @@
     <link rel="canonical" href="@yield('canonical', url()->current())" />
 
     <!-- Scripts -->
+    @yield('scripts')
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    @yield('fonts')
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('styles')
 </head>
 <body>
     <div id="app">
@@ -83,5 +86,6 @@
             @yield('content')
         </main>
     </div>
+    @yield('footer')
 </body>
 </html>

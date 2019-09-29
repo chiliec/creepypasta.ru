@@ -1,6 +1,19 @@
 @extends('layouts.app')
 @section('title', 'Add New Post')
 
+@section('footer')
+    <script src="{{ asset('tinymce/tinymce.js') }}"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea.source',
+            theme: 'silver',
+            menubar: false,
+            plugins: ["lists link image media autolink imagetools preview code fullscreen"],
+            toolbar: "bold italic | bullist numlist | link image media | preview code fullscreen"
+        });
+    </script>
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -37,7 +50,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Текст:</strong>
-                    <textarea class="form-control" style="height:150px" name="source" placeholder="Текст">{{ old('source') }}</textarea>
+                    <textarea class="form-control source" style="height:340px" name="source" placeholder="Текст">{{ old('source') }}</textarea>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
