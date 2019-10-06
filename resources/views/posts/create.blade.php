@@ -2,16 +2,7 @@
 @section('title', 'Add New Post')
 
 @section('footer')
-    <script src="{{ asset('tinymce/tinymce.js') }}"></script>
-    <script>
-        tinymce.init({
-            selector: 'textarea.source',
-            theme: 'silver',
-            menubar: false,
-            plugins: ["lists link image media autolink imagetools preview code fullscreen"],
-            toolbar: "bold italic | bullist numlist | link image media | preview code fullscreen"
-        });
-    </script>
+    @include('partials.editor-init')
 @endsection
 
 @section('content')
@@ -26,16 +17,7 @@
         </div>
     </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    @include('partials.errors')
 
     <form action="{{ route('posts.store') }}" method="POST">
         @csrf
