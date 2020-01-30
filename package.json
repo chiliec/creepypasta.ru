@@ -24,6 +24,6 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "tinymce": "^5.0.16"
+        "tinymce": "^5.1.4"
     }
 }
