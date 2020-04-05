@@ -11,7 +11,8 @@
 |
 */
 
-Auth::routes();
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('users', 'UserController@index')->name('users.index');
 Route::get('users/{id}', 'UserController@show')->name('users.show');
