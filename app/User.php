@@ -4,15 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableContract;
 use Cog\Laravel\Love\Reacterable\Models\Traits\Reacterable;
+use Soved\Laravel\Magic\Auth\Contracts\CanMagicallyLogin as CanMagicallyLoginContract;
+use Soved\Laravel\Magic\Auth\Traits\CanMagicallyLogin;
 
-class User extends Authenticatable implements ReacterableContract
+class User extends Authenticatable implements ReacterableContract, CanMagicallyLoginContract
 {
-    use Reacterable;
     use Notifiable;
+    use Reacterable;
+    use CanMagicallyLogin;
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +22,7 @@ class User extends Authenticatable implements ReacterableContract
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email',
     ];
 
     /**
@@ -29,7 +31,7 @@ class User extends Authenticatable implements ReacterableContract
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'remember_token',
     ];
 
     /**
