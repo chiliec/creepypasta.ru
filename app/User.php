@@ -35,15 +35,6 @@ class User extends Authenticatable implements ReacterableContract, CanMagicallyL
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    /**
      * A user can have many posts
      *
      * @return HasMany
