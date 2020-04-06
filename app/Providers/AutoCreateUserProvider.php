@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Support\Str;
 
 final class AutoCreateUserProvider extends EloquentUserProvider {
 
@@ -17,15 +18,12 @@ final class AutoCreateUserProvider extends EloquentUserProvider {
         if ($user = parent::retrieveByCredentials($credentials)) {
             return $user;
         }
-        if (array_key_exists('email', $credentials)) {
-            $credentials = ['email' => $credentials['email']];
-            if (!parent::retrieveByCredentials($credentials)) {
-                $model = $this->createModel();
-                $credentials['name'] = 'Guest';
-                $model->fill($credentials);
-                if ($model->save()) {
-                    return parent::retrieveByCredentials($credentials);
-                }
+        if ((count($credentials) === 1 && Str::contains($this->firstCredentialKey($credentials), 'email'))) {
+            $model = $this->createModel();
+            $credentials['name'] = 'Guest';
+            $model->fill($credentials);
+            if ($model->save()) {
+                return parent::retrieveByCredentials($credentials);
             }
         }
     }
