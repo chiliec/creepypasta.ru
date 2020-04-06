@@ -20,7 +20,7 @@ final class AutoCreateUserProvider extends EloquentUserProvider {
         }
         if ((count($credentials) === 1 && Str::contains($this->firstCredentialKey($credentials), 'email'))) {
             $model = $this->createModel();
-            $credentials['name'] = 'Guest';
+            $credentials['name'] = strstr($credentials['email'], '@', true) ?: 'Guest';
             $model->fill($credentials);
             if ($model->save()) {
                 return parent::retrieveByCredentials($credentials);
