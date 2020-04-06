@@ -17,13 +17,15 @@ final class AutoCreateUserProvider extends EloquentUserProvider {
         if ($user = parent::retrieveByCredentials($credentials)) {
             return $user;
         }
-        if (!in_array('name', $credentials)) {
-            $credentials['name'] = 'Guest';
-        }
-        $model = $this->createModel();
-        $model->fill($credentials);
-        if ($model->save()) {
-            return $model;
+        if (array_key_exists('email', $credentials)) {
+            $model = $this->createModel();
+            $model->fill([
+                'name' => 'Guest',
+                'email' => $credentials['email'],
+            ]);
+            if ($model->save()) {
+                return parent::retrieveByCredentials($credentials);
+            }
         }
     }
 }
