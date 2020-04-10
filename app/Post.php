@@ -17,7 +17,7 @@ class Post extends Model implements ReactableContract
     use SoftDeletes;
     use Taggable;
 
-    public static $validTypes = ['content', 'video', 'link'];
+    public static $validTypes = ['content'];
 
     protected $fillable = ['title', 'description', 'type', 'tags', 'user_ip', 'hash'];
 

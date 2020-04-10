@@ -18,6 +18,9 @@ class PostContent extends Model implements Content
     protected $table = 'posts_content';
 
     public $timestamps = false;
+    public $incrementing = false;
+
+    protected $primaryKey = 'post_id';
 
     public function post() {
         return $this->belongsTo(Post::class);
