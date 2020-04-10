@@ -32,7 +32,7 @@
 
                         <div class="card">
                             <p class="card-text">
-                                {{ $post->content->show() }}
+                                {!! $post->text !!}
                             </p>
                             <div class="card-footer">
                                 <div class="d-flex justify-content-center">

@@ -24,8 +24,8 @@
 
                         @foreach($posts as $post)
                             <div class="card">
-                                <p>Title: <a href="{{route('posts.detail', [$post->id, $post->slug])}}">{{ $post->title }}</a></p>
-                                <p>Content: {{ $post->content->show() }}</p>
+                                <p>Title: <a href="{{ $post->url }}">{{ $post->title }}</a></p>
+                                <p>Content: {!! $post->description !!}</p>
                                 <p>Author: {{ $post->author->name }}</p>
                             </div>
                         @endforeach
