@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Post;
-use App\PostContent;
 use Cog\Laravel\Love\ReactionType\Models\ReactionType;
 use Conner\Tagging\Model\Tag;
 use Exception;
@@ -18,14 +18,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class PostController extends Controller
 {
     private $postsPerPage = 10;
-    private $minPostLength = 50;
 
     private function validationRules() {
-        $types = implode(',', Post::$validTypes);
         return [
             'title' => 'required|string|max:255',
-            'source' => "required|min:{$this->minPostLength}",
-            'type' => "required|in:{$types}",
+            'content' => "required|array",
             'tags' => 'nullable'
         ];
     }
@@ -68,27 +65,9 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $source = request('source');
         $attributes = $request->validate($this->validationRules());
-        $attributes['description'] = $source;
-        $attributes['hash'] = md5($source);
-        $attributes['user_ip'] = $request->getClientIp();
         $post = Post::create($attributes);
-        $tags = request('tags');
-        $post->tag($tags);
-        switch ($post->type) {
-            case 'content':
-                PostContent::create([
-                    'post_id' => $post->id,
-                    'source' => $source,
-                    'text' => $source,
-                ]);
-                break;
-            default:
-                abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
-        }
-        return redirect()->route('posts.detail', [$post->id, $post->slug])
-            ->with('status', 'Post created successfully.');
+        return new PostResource($post);
     }
 
     /**
@@ -144,25 +123,8 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $attributes = $request->validate($this->validationRules());
-        $source = request('source');
-        $attributes['description'] = $source;
-        $attributes['hash'] = md5($source);
         $post->update($attributes);
-        $tags = request('tags');
-        $post->tag($tags);
-        switch ($post->type) {
-            case 'content':
-                $post->content()->update([
-                    'post_id' => $post->id,
-                    'source' => $source,
-                    'text' => $source,
-                ]);
-                break;
-            default:
-                abort(Response::HTTP_BAD_REQUEST, 'Unknown post type');
-        }
-        return redirect()->route('posts.detail', [$post->id, $post->slug])
-            ->with('status', 'Post updated successfully.');
+        return new PostResource($post);
     }
 
     /**
