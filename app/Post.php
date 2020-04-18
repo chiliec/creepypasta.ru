@@ -3,12 +3,14 @@
 namespace App;
 
 use Conner\Tagging\Taggable;
+use EditorJS\EditorJSException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Cog\Contracts\Love\Reactable\Models\Reactable as ReactableContract;
 use Cog\Laravel\Love\Reactable\Models\Traits\Reactable;
+use EditorJS\EditorJS;
 
 class Post extends Model implements ReactableContract
 {
@@ -57,36 +59,57 @@ class Post extends Model implements ReactableContract
         return implode(', ', $tags);
     }
 
-    private static function convertToHTML($content): string
+    private static function convertToHTML($json): string
     {
-        if (empty($content)) {
+        if (empty($json)) {
             return '';
         }
-
-        $blocks = Arr::get($content, 'blocks', []);
+        if (!is_string($json)) {
+            $newData = json_encode($json);
+            if (json_last_error() === \JSON_ERROR_NONE) {
+                $json = $newData;
+            }
+        }
+        $config = config('editor-js');
+        try {
+            $editor = new EditorJS($json, json_encode($config));
+        } catch (EditorJSException $e) {
+            return $e->getMessage();
+        }
+        $blocks = $editor->getBlocks();
         $output = '';
-
         foreach ($blocks as $block) {
             switch ($block['type']) {
                 case 'paragraph':
                     $text = Arr::get($block, 'data.text');
-                    $output .= "<p>{$text}</p>";
+                    $output .= view('blocks.paragraph', compact('text'))->render();
                     break;
                 case 'header':
                     $level = Arr::get($block, 'data.level');
                     $text = Arr::get($block, 'data.text');
-                    $output .= "<h{$level}>{$text}</h{$level}>";
+                    $output .= view('blocks.header', compact('level', 'text'))->render();
                     break;
                 case 'delimiter':
-                    $output .= '<div class="ce-delimiter"></div>';
+                    $output .= view('blocks.delimiter')->render();
                     break;
                 case 'code':
                     $code = Arr::get($block, 'data.code');
-                    $output .= "<pre><code>{$code}</code></pre>";
+                    $output .= view('blocks.code', compact('code'))->render();
+                    break;
+                case 'checklist':
+                    $items = Arr::get($block, 'data.items');
+                    $output .= view('blocks.checklist', compact('items'))->render();
+                    break;
+                case 'quote':
+                    $quote = Arr::get($block, 'data.text');
+                    $caption = Arr::get($block, 'data.caption');
+                    $alignment = Arr::get($block, 'data.alignment');
+                    $output .= view('blocks.quote', compact('quote', 'caption', 'alignment'))->render();
+                    break;
+                case 'link':
                     break;
             }
         }
-
         return html_entity_decode($output);
     }
 }
