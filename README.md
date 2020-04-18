@@ -14,6 +14,7 @@ Based on Laravel 7, so make sure you have meet [Laravel 7 server requirements](h
 * Execute `php artisan key:generate --ansi`
 * Execute `php artisan migrate`
 * Execute `php artisan love:reaction-type-add --default`
+* Execute `npm run dev`
 * Execute `php artisan serve`
 * ???
 * You're awesome!

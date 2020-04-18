@@ -7,6 +7,10 @@ yarn-error.log
 public/storage
 public/hot
 
+# Compiled assets
+public/css/
+public/js/
+
 storage/*.key
 .env
 Homestead.yaml
