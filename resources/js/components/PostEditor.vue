@@ -17,8 +17,6 @@
 
 
 <script>
-    const EditorJS = require('@editorjs/editorjs');
-    const Paragraph = require('@editorjs/paragraph');
     const notifier = require('codex-notifier');
 
     export default {
@@ -29,6 +27,12 @@
             let tools = {};
             let data = self.content;
 
+            const Paragraph = require('@editorjs/paragraph');
+            tools.paragraph = {
+                class: Paragraph,
+                inlineToolbar: true
+            };
+
             const Header = require('@editorjs/header');
             tools.header = {
                 class: Header,
@@ -37,6 +41,7 @@
                 }
             };
 
+            const EditorJS = require('@editorjs/editorjs');
             let editor = new EditorJS({
                 holderId: 'editor-js',
                 tools,

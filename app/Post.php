@@ -6,7 +6,6 @@ use Conner\Tagging\Taggable;
 use EditorJS\EditorJSException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Cog\Contracts\Love\Reactable\Models\Reactable as ReactableContract;
 use Cog\Laravel\Love\Reactable\Models\Traits\Reactable;
@@ -78,37 +77,13 @@ class Post extends Model implements ReactableContract
         }
         $blocks = $editor->getBlocks();
         $output = '';
-        foreach ($blocks as $block) {
-            switch ($block['type']) {
-                case 'paragraph':
-                    $text = Arr::get($block, 'data.text');
-                    $output .= view('blocks.paragraph', compact('text'))->render();
-                    break;
-                case 'header':
-                    $level = Arr::get($block, 'data.level');
-                    $text = Arr::get($block, 'data.text');
-                    $output .= view('blocks.header', compact('level', 'text'))->render();
-                    break;
-                case 'delimiter':
-                    $output .= view('blocks.delimiter')->render();
-                    break;
-                case 'code':
-                    $code = Arr::get($block, 'data.code');
-                    $output .= view('blocks.code', compact('code'))->render();
-                    break;
-                case 'checklist':
-                    $items = Arr::get($block, 'data.items');
-                    $output .= view('blocks.checklist', compact('items'))->render();
-                    break;
-                case 'quote':
-                    $quote = Arr::get($block, 'data.text');
-                    $caption = Arr::get($block, 'data.caption');
-                    $alignment = Arr::get($block, 'data.alignment');
-                    $output .= view('blocks.quote', compact('quote', 'caption', 'alignment'))->render();
-                    break;
-                case 'link':
-                    break;
+        for ($i = 0; $i < count($blocks); $i++) {
+            $keys = [];
+            foreach($blocks[$i]['data'] as $key => $value) {
+                $keys[] = $key;
+                $$key = $value;
             }
+            $output .= view('blocks.' . $blocks[$i]['type'], compact($keys))->render();
         }
         return html_entity_decode($output);
     }
