@@ -4,6 +4,7 @@ namespace App;
 
 use Conner\Tagging\Taggable;
 use EditorJS\EditorJSException;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -83,7 +84,11 @@ class Post extends Model implements ReactableContract
                 $keys[] = $key;
                 $$key = $value;
             }
-            $output .= view('blocks.' . $blocks[$i]['type'], compact($keys))->render();
+            $factory = app(ViewFactory::class);
+            $view = 'blocks.' . $blocks[$i]['type'];
+            if ($factory->exists($view)) {
+                $output .= $factory->make($view, compact($keys))->render();
+            }
         }
         return html_entity_decode($output);
     }
