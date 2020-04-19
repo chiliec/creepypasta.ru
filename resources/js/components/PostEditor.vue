@@ -1,17 +1,15 @@
 <template>
     <div>
         <div class="editor-container">
-            <input class="title" v-model="title"
+            <input class="title"
+                   v-model="title"
                    placeholder="Заголовок"
                    maxlength="120" />
-            <editor class="editor" :init-data="content"
-                    autofocus
-                    ref="editor"
-                    @save="onSave" />
+            <div id="editor-js" class="editor-js"></div>
         </div>
-        <div>
+        <div class="buttons-container">
             <div @click="save" class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -19,10 +17,41 @@
 
 
 <script>
+    const EditorJS = require('@editorjs/editorjs');
+    const Paragraph = require('@editorjs/paragraph');
     const notifier = require('codex-notifier');
 
     export default {
         props: ['post'],
+
+        created() {
+            let self = this;
+            let tools = {};
+            let data = self.content;
+
+            const Header = require('@editorjs/header');
+            tools.header = {
+                class: Header,
+                config: {
+                    placeholder: "Heading"
+                }
+            };
+
+            let editor = new EditorJS({
+                holderId: 'editor-js',
+                tools,
+                initialBlock: 'paragraph',
+                placeholder: 'Enter text',
+                autofocus: true,
+                data: data,
+                onReady: function () {},
+                onChange: function () {
+                    editor.save().then((savedData) => {
+                        self.handleChange(savedData);
+                    })
+                }
+            });
+        },
 
         data() {
             return {
@@ -34,51 +63,50 @@
         watch: {
             post: {
                 immediate: true,
-                handler(current) {
-                    if (current) {
-                        this.title = current.title;
-                        this.content = current.content
+                handler(post) {
+                    if (post) {
+                        this.title = post.title;
+                        this.content = post.content;
                     }
                 }
             }
         },
 
         methods: {
-            save(data) {
-                this.$refs.editor.save()
+            handleChange(content) {
+                this.content = content;
             },
-
-            request(content) {
+            save() {
                 const data = {
                     title: this.title,
-                    content: content,
+                    content: this.content
                 };
+                let request;
                 if (this.post) {
-                    return axios.patch(`/posts/${this.post.id}`, data);
+                    request = axios.default.patch(`/posts/${this.post.id}`, data);
                 } else {
-                    return axios.post('/posts', data);
+                    request = axios.default.post('/posts', data);
                 }
-            },
-
-            onSave(content) {
-                this.request(content).then((result) => {
-                    let url = result.data.url;
-                    if (url) {
-                        window.location.href = url;
-                    } else {
-                        window.location.href = '/';
-                    }
-                }).catch(({response: {data: {errors}}}) => {
-                    let key = _.head(_.keys(errors));
-
-                    if (key) {
-                        let message = _.get(errors, `${key}.0`);
-                        if (message) {
-                            console.log(message);
-                            notifier.show({message: message, style: 'error'});
+                request
+                    .then((result) => {
+                        let url = result.data.url;
+                        if (url) {
+                            window.location.href = url;
+                        } else {
+                            window.location.href = '/';
                         }
-                    }
-                })
+                    })
+                    .catch(({ response: { data: {errors} }}) => {
+                        let key = _.head(_.keys(errors));
+
+                        if (key) {
+                            let message = _.get(errors, `${key}.0`);
+                            if (message) {
+                                console.log(message);
+                                notifier.show({message: message, style: 'error'});
+                            }
+                        }
+                    })
             }
         }
     }
