@@ -88,6 +88,8 @@ class Post extends Model implements ReactableContract
             $view = 'blocks.' . $blocks[$i]['type'];
             if ($factory->exists($view)) {
                 $output .= $factory->make($view, compact($keys))->render();
+            } else {
+                $output .= "<p>View {$view} not found.</p>";
             }
         }
         return html_entity_decode($output);
