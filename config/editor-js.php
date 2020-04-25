@@ -76,15 +76,15 @@ return [
                 'type' => 'string'
             ]
         ],
-        'link' => [
-            'link' => 'string',
+        'linkTool' => [
+            'link' => [
+                'type' => 'string'
+            ],
             'meta' => [
                 'type' => 'array',
-                'required' => false,
                 'data' => [
                     'title' => [
                         'type' => 'string',
-                        'required' => false,
                     ],
                     'description' => [
                         'type' => 'string',
@@ -101,7 +101,7 @@ return [
                         ]
                     ]
                 ]
-            ],
+            ]
         ],
         'checklist' => [
             'items' => [

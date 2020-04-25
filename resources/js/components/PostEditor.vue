@@ -41,6 +41,14 @@
                 }
             };
 
+            const LinkTool = require('@editorjs/link');
+            tools.linkTool = {
+                class: LinkTool,
+                config: {
+                    endpoint: '/fetch-link',
+                }
+            };
+
             const EditorJS = require('@editorjs/editorjs');
             let editor = new EditorJS({
                 holderId: 'editor-js',

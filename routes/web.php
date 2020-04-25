@@ -29,3 +29,4 @@ Route::prefix('profile')->group(function () {
     Route::get('invites/new', 'InviteController@store')->name('invites.new');
 });
 
+Route::get('fetch-link', 'LinkController@fetch')->name('fetch-link');
