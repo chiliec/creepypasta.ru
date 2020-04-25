@@ -12,6 +12,7 @@
         "php": "^7.2",
         "ext-curl": "*",
         "ext-dom": "*",
+        "ext-json": "*",
         "clarkeash/doorman": "^5.0",
         "cybercog/laravel-love": "^8.3",
         "fideloper/proxy": "^4.0",

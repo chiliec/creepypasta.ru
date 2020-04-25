@@ -41,6 +41,23 @@
                 }
             };
 
+            const List = require('@editorjs/list');
+            tools.list = {
+                class: List,
+            };
+
+            const Checklist = require('@editorjs/checklist');
+            tools.checklist = {
+                class: Checklist,
+                inlineToolbar: true
+            };
+
+            const Delimiter = require('@editorjs/delimiter');
+            tools.delimiter = Delimiter;
+
+            const CodeTool = require('@editorjs/code');
+            tools.code = CodeTool;
+
             const LinkTool = require('@editorjs/link');
             tools.linkTool = {
                 class: LinkTool,

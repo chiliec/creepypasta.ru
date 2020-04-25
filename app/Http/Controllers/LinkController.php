@@ -17,9 +17,6 @@ class LinkController extends Controller
         $url = $remoteContent['url'];
         $content = $remoteContent['content'];
         $meta = $this->parseMetadata($content);
-        if (!is_array($meta)) {
-            return ['success' => 0];
-        }
         $results = [
             'success' => 1,
             'link' => $url,
