@@ -37,7 +37,9 @@
             tools.header = {
                 class: Header,
                 config: {
-                    placeholder: "Heading"
+                    placeholder: "Enter a header",
+                    levels: [4, 5, 6],
+                    defaultLevel: 4
                 }
             };
 
