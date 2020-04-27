@@ -30,3 +30,6 @@ Route::prefix('profile')->group(function () {
 });
 
 Route::get('fetch-link', 'LinkController@fetch')->name('fetch-link');
+
+Route::post('upload-image', 'SaveImageController@file')->name('upload-image');
+Route::post('upload-image-url', 'SaveImageController@url')->name('upload-image-url');

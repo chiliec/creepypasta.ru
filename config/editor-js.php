@@ -47,19 +47,12 @@ return [
                     'url' => [
                         'type' => 'string',
                     ],
-                    'thumbnails' => [
-                        'type' => 'array',
-                        'required' => false,
-                        'data' => [
-                            '-' => [
-                                'type' => 'string',
-                            ]
-                        ],
-                    ]
                 ],
             ],
             'caption' => [
-                'type' => 'string'
+                'type' => 'string',
+                'required' => false,
+                'allow_null' => true
             ],
             'withBorder' => [
                 'type' => 'boolean'

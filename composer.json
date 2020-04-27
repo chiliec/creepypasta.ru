@@ -8,6 +8,12 @@
         "anonymous"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/editor-js/editorjs-php.git"
+        }
+    ],
     "require": {
         "php": "^7.2",
         "ext-curl": "*",
@@ -21,7 +27,7 @@
         "laravel/ui": "^2.0",
         "rtconner/laravel-tagging": "^4.0",
         "soved/laravel-magic-auth": "^1.1",
-        "codex-team/editor.js": "^2.0"
+        "codex-team/editor.js": "dev-choose-allowed-null"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
